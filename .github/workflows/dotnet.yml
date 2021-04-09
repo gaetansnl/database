@@ -16,6 +16,8 @@ jobs:
       with:
         dotnet-version: '5.0.x' # SDK Version to use.
         source-url: https://nuget.pkg.github.com/${{ env.GITHUB_REPOSITORY_OWNER }}/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
     - run: dotnet build RDB
     - name: Create the package
       run: dotnet pack --configuration Release RDB
