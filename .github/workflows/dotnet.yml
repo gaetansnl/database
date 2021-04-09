@@ -22,4 +22,4 @@ jobs:
     - name: Create the package
       run: dotnet pack --configuration Release RDB
     - name: Publish the package to GPR
-      run: dotnet nuget push RDB/bin/Release/*.nupkg --api-key ${{ env.GITHUB_API_KEY }} --skip-duplicate
+      run: dotnet nuget push RDB/bin/Release/*.nupkg --api-key ${{ github.token }} --skip-duplicate
