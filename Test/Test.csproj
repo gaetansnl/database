@@ -6,8 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Query\Query.csproj" />
-      <ProjectReference Include="..\Storage\Storage.csproj" />
+      <ProjectReference Include="..\RDB\RDB.csproj" />
     </ItemGroup>
 
 </Project>

@@ -2,8 +2,6 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
-        <RootNamespace>RDB.Query</RootNamespace>
-        <AssemblyName>RDB.Query</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
