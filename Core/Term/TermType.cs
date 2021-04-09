@@ -1,4 +1,4 @@
-﻿namespace Core.Term
+﻿namespace RDB.Core.Term
 {
     public enum TermType
     {

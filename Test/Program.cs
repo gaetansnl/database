@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
-using System.Text.Json;
-using Core.Term;
-using Query;
+using RDB.Core.Term;
+using RDB.Query;
+using RDB.Storage;
+using RDB.Storage.Rocks;
 using RocksDbSharp;
-using Storage.Rocks;
 
 namespace Test
 {
@@ -17,7 +16,7 @@ namespace Test
             Console.WriteLine("Hello World!");
             var options = new DbOptions();
             options.SetCreateIfMissing();
-            var storage = new RocksDbStorage(options, "gg");
+            IStorageEngine storage = new RocksDbStorage(options, @"C:\Users\Gaetan\RiderProjects\API\Indexer\bin\Debug\net5.0\Index");
             // for (int i = 0; i < 5000; i++)
             // {
             //       JsonDocument gg = JsonSerializer.Deserialize<JsonDocument>("{\"name\":\"john\",\"age\":22,\"class\":\"mca\",\"test\":{\"gg\":2.5}}");
@@ -36,7 +35,9 @@ namespace Test
             stopWatch.Start();
 
             
-            var query = new OrQuery(new List<IQuery>{new TermQuery(Term.FromLong(24)), new TermQuery(Term.FromString("mca3"))});
+            // var query = new OrQuery(new List<IQuery>{new TermQuery(Term.FromLong(24)), new TermQuery(Term.FromString("mca3"))});
+            var query = new NotQuery(new AndQuery(new List<IQuery>(){new NotQuery(new TermQuery(".StrainId", Term.FromString("ERR245662"))), new NotQuery(new TermQuery(".StrainId", Term.FromString("DRR034342")))}));
+            // var query = new AndQuery(new NotQuery(new TermQuery(".StrainId", Term.FromString("DRR034342"))));
             var executor = query.GetExecutor(storage);
             var enumerator = executor.GetEnumerator();
             while (enumerator.MoveNext())

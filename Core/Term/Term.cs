@@ -3,7 +3,7 @@ using System.Buffers;
 using System.Buffers.Binary;
 using System.Text;
 
-namespace Core.Term
+namespace RDB.Core.Term
 {
     public struct Term : IDisposable
     {

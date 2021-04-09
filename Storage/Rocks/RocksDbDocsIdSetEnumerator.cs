@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
-using Core.Search;
+using RDB.Core.Search;
 using RocksDbSharp;
 
-namespace Storage.Rocks
+namespace RDB.Storage.Rocks
 {
     public class RocksDbDocsIdSetEnumerator : IDocIdSetEnumerator
     {
@@ -60,7 +60,7 @@ namespace Storage.Rocks
             }
             else
             {
-                 using var _ = RocksDbEncoder.EncodeInvertedIndexPostingWithProperty(PropertyId.Value, TermId, target, out var prefix);
+                 using var _ = RocksDbEncoder.EncodeInvertedIndexPostingWithProperty(TermId, PropertyId.Value , target, out var prefix);
                  RocksDbIterator.Seek(prefix.ToArray());
             }
             

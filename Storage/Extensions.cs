@@ -1,8 +1,4 @@
-﻿using System;
-using System.Buffers;
-using System.Buffers.Binary;
-
-namespace Storage
+﻿namespace RDB.Storage
 {
     public static class Extensions
     {

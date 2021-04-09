@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Core.Search;
-using Storage;
+using RDB.Core.Search;
+using RDB.Storage;
 
-namespace Query
+namespace RDB.Query
 {
     public class AndQuery : IQuery
     {

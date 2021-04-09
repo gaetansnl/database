@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Core.Search
+namespace RDB.Core.Search
 {
     public interface IDocIdSet: IEnumerable
     {

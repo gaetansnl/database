@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Buffers;
 using System.Buffers.Binary;
-using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
-using Core.Search;
-using Core.Term;
+using RDB.Core.Search;
+using RDB.Core.Term;
 using RocksDbSharp;
 
-namespace Storage.Rocks
+namespace RDB.Storage.Rocks
 {
     public class RocksDbStorage : IDisposable, IStorageEngine
     {
         internal RocksDb Database;
-        protected RocksDbAliasStore AliasStore;
+        internal RocksDbAliasStore AliasStore;
+        protected string Path;
 
         internal enum StoreType
         {
@@ -35,6 +35,7 @@ namespace Storage.Rocks
 
         public RocksDbStorage(DbOptions options, string path)
         {
+            Path = path;
             options.SetUint64addMergeOperator();
             Database = RocksDb.Open(options, path);
             AliasStore = new RocksDbAliasStore(this);
@@ -64,14 +65,14 @@ namespace Storage.Rocks
 
         protected void AddInvertedIndexPosting(WriteBatch batch, int propertyId, int termId, int docId)
         {
-            using var posting1 = RocksDbEncoder.EncodeInvertedIndexPostingWithProperty(propertyId, termId, docId, out var span1);
+            using var posting1 = RocksDbEncoder.EncodeInvertedIndexPostingWithProperty(termId, propertyId, docId, out var span1);
             using var posting2 = RocksDbEncoder.EncodeInvertedIndexPosting(termId, docId, out var span2);
             
             batch.Put(span1, ReadOnlySpan<byte>.Empty);
             IncrementCounterValue(batch, Counter.TermFrequencyByTermAndProperty, span1.Slice(1, 8));
-            
-            //Todo: Slow
+
             batch.Put(span2, ReadOnlySpan<byte>.Empty);
+            //Todo: Slow
             if (Database.Get(span2) == null) IncrementCounterValue(batch, Counter.TermFrequencyByTerm, span2.Slice(1, 4));
         }
 
@@ -91,7 +92,7 @@ namespace Storage.Rocks
             }
         }
 
-        public void Index(JsonDocument doc)
+        public int Index(JsonDocument doc)
         {
             byte[] array = ArrayPool<byte>.Shared.Rent(32768);
             try
@@ -108,11 +109,17 @@ namespace Storage.Rocks
 
                 IndexJsonElement(b, docId, doc.RootElement, array.AsSpan());
                 Database.Write(b);
+                return docId;
             }
             finally
             {
                 ArrayPool<byte>.Shared.Return(array);
             }
+        }
+
+        public void Clear()
+        {
+            throw new NotImplementedException();
         }
 
         protected void IndexJsonElement(WriteBatch batch, int docId, JsonElement element, Span<byte> currentPath,
@@ -132,7 +139,7 @@ namespace Storage.Rocks
                 case JsonValueKind.Array:
                     foreach (var v in element.EnumerateArray())
                     {
-                        if (v.ValueKind == JsonValueKind.Object) continue;
+                        // if (v.ValueKind == JsonValueKind.Object) continue;
                         var keySpan = Encoding.UTF8.GetBytes("[]").AsSpan();
                         keySpan.CopyTo(currentPath.Slice(currentPathSize));
                         IndexJsonElement(batch, docId, v, currentPath, currentPathSize + keySpan.Length);

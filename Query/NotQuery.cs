@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
-using Core.Search;
-using Storage;
+using RDB.Core.Search;
+using RDB.Storage;
 
-namespace Query
+namespace RDB.Query
 {
     public class NotQuery : IQuery
     {
@@ -40,7 +40,7 @@ namespace Query
                 public IQueryExecutor SubExecutor;
                 public IDocIdSetEnumerator SubEnumerator;
                 public int MaxDocs;
-                public int CurrentDocId = -2;
+                public int CurrentDocId = -1;
                 public bool SubEnumeratorEnded;
 
                 public NotQueryEnumerator(IQueryExecutor subExecutor, int maxDocs)
@@ -50,10 +50,8 @@ namespace Query
                     MaxDocs = maxDocs;
                 }
 
-                public bool MoveNext()
+                public bool AdvanceUntilNotAligned()
                 {
-                    CurrentDocId++;
-
                     while (CurrentDocId == SubEnumerator.Current && !SubEnumeratorEnded)
                     {
                         CurrentDocId++;
@@ -68,6 +66,20 @@ namespace Query
 
                     return true;
                 }
+
+                public bool MoveNext()
+                {
+                    if (CurrentDocId > -1) CurrentDocId++;
+                    return AdvanceUntilNotAligned();
+                }
+
+                // public bool Advance(int target)
+                // {
+                //     SubEnumeratorEnded = !SubEnumerator.Advance(target);
+                //     CurrentDocId = target;
+                //
+                //     return AdvanceUntilNotAligned();
+                // }
 
                 public void Reset()
                 {

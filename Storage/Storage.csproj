@@ -4,6 +4,8 @@
         <TargetFramework>net5.0</TargetFramework>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <RootNamespace>RDB.Storage</RootNamespace>
+        <AssemblyName>RDB.Storage</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>

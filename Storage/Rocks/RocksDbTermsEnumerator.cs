@@ -2,10 +2,10 @@
 using System.Buffers.Binary;
 using System.Collections;
 using System.Runtime.InteropServices;
-using Core.Search;
+using RDB.Core.Search;
 using RocksDbSharp;
 
-namespace Storage.Rocks
+namespace RDB.Storage.Rocks
 {
     public class RocksDbTermsEnumerator : ITermsEnumerator
     {
@@ -24,6 +24,7 @@ namespace Storage.Rocks
         protected byte[] RocksIteratorKey;
         protected bool RocksIteratorValid;
         protected int CurrentTermId;
+
         protected void UpdateIteratorState()
         {
             var iteratorValid = RocksDbIterator.Valid();
@@ -32,7 +33,7 @@ namespace Storage.Rocks
                 RocksIteratorValid = false;
                 return;
             }
-            
+
             // Todo: Allocating, should fix RocksDB ?
             RocksIteratorKey = RocksDbIterator.Key();
             RocksIteratorValid = RocksIteratorKey[0] == TermStart[0];
@@ -63,7 +64,7 @@ namespace Storage.Rocks
         {
             Positioned = false;
         }
-        
+
         public ReadOnlyMemory<byte> Current => new ReadOnlyMemory<byte>(RocksIteratorKey).Slice(1);
 
         object IEnumerator.Current => Current;
@@ -80,6 +81,7 @@ namespace Storage.Rocks
             {
                 RocksDbIterator.Seek(b, (ulong) bytes.Length);
             }
+
             UpdateIteratorState();
             return RocksIteratorValid && RocksIteratorKey.AsSpan().SequenceEqual(bytes);
         }
@@ -91,15 +93,21 @@ namespace Storage.Rocks
             {
                 RocksDbIterator.Seek(b, (ulong) bytes.Length);
             }
+
             UpdateIteratorState();
             return RocksIteratorValid;
         }
 
         public int CurrentTermFrequency { get; }
 
-        public IDocIdSetEnumerator CurrentTermDocs()
+        public IDocIdSetEnumerator CurrentTermDocs(ReadOnlyMemory<byte>? field)
         {
-            return new RocksDbDocsIdSetEnumerator(Storage, CurrentTermId, null);
+            if (field == null) return new RocksDbDocsIdSetEnumerator(Storage, CurrentTermId, null);
+            
+            var fieldId = Storage.AliasStore.Get(field.Value.Span);
+            if (fieldId == null) return new EmptyDocIdSetEnumerator();
+            return new RocksDbDocsIdSetEnumerator(Storage, CurrentTermId, fieldId);
+
         }
     }
 }

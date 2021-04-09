@@ -1,7 +1,7 @@
 ﻿using System.Collections;
-using Core.Search;
+using RDB.Core.Search;
 
-namespace Query
+namespace RDB.Query
 {
     public interface IQueryExecutor: IEnumerable
     {

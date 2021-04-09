@@ -2,11 +2,11 @@
 using System.Buffers;
 using System.Buffers.Binary;
 
-namespace Storage.Rocks
+namespace RDB.Storage.Rocks
 {
     public static class RocksDbEncoder
     {
-        public static IMemoryOwner<byte> EncodeInvertedIndexPostingWithProperty(int propertyId, int termId, int docId,
+        public static IMemoryOwner<byte> EncodeInvertedIndexPostingWithProperty(int termId, int propertyId, int docId,
             out Span<byte> span)
         {
             var size = 1 + 3 * 4;

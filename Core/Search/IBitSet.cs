@@ -1,4 +1,4 @@
-﻿namespace Core.Search
+﻿namespace RDB.Core.Search
 {
     public interface IBitSet
     {

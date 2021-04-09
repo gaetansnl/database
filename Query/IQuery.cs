@@ -1,6 +1,6 @@
-﻿using Storage;
+﻿using RDB.Storage;
 
-namespace Query
+namespace RDB.Query
 {
     public interface IQuery
     {

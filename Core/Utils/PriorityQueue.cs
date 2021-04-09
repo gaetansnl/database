@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace Core.Utils
+namespace RDB.Core.Utils
 {
    /// <summary>
     ///  Represents a min priority queue.

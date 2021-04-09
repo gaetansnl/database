@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Core.Search;
-using Core.Utils;
-using Storage;
+using RDB.Core.Search;
+using RDB.Core.Utils;
+using RDB.Storage;
 
-namespace Query
+namespace RDB.Query
 {
     public class OrQuery : IQuery
     {
