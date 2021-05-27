@@ -122,6 +122,11 @@ namespace RDB.Storage.Rocks
             throw new NotImplementedException();
         }
 
+        public void Optimize()
+        {
+            Database.CompactRange(null,null, null);
+        }
+
         protected void IndexJsonElement(WriteBatch batch, int docId, JsonElement element, Span<byte> currentPath,
             int currentPathSize = 0)
         {

@@ -10,5 +10,6 @@ namespace RDB.Storage
         public int Index(JsonDocument doc);
 
         public void Clear();
+        public void Optimize();
     }
 }
