@@ -82,6 +82,7 @@ namespace RDB.Query
                         CurrentDocId = Sorted.Peek().Current;
                         return true;
                     }
+                    CurrentDocId = Int32.MaxValue;
                     return false;
                 }
 
