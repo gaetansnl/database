@@ -64,7 +64,7 @@ namespace RDB.Query
                             {
                                 if (!Lead.Advance(Enumerators[index].Current)) return false;
                                 doc = Lead.Current;
-                                index = 1;
+                                index = 0; // 0 Because it will be incremented next loop to 1
                             }
                         }
                     }
