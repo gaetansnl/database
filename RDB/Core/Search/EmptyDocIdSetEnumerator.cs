@@ -7,6 +7,7 @@ namespace RDB.Core.Search
     {
         public bool MoveNext()
         {
+            Current = Int32.MaxValue;
             return false;
         }
 
@@ -14,7 +15,8 @@ namespace RDB.Core.Search
         {
         }
 
-        public int Current => Int32.MaxValue;
+
+        public int Current { get; protected set; } = -1;
 
         object IEnumerator.Current => Current;
 
